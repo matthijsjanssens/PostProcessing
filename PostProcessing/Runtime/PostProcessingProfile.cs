@@ -21,6 +21,7 @@ namespace UnityEngine.PostProcessing
         public GrainModel grain = new GrainModel();
         public VignetteModel vignette = new VignetteModel();
         public DitheringModel dithering = new DitheringModel();
+        public CanvasBlurModel canvasBlur = new CanvasBlurModel();
 
 #if UNITY_EDITOR
         // Monitor settings

@@ -48,6 +48,7 @@ namespace UnityEngine.PostProcessing
         VignetteComponent m_Vignette;
         DitheringComponent m_Dithering;
         FxaaComponent m_Fxaa;
+        CanvasBlurComponent m_Blur;
 
         void OnEnable()
         {
@@ -76,6 +77,7 @@ namespace UnityEngine.PostProcessing
             m_Vignette = AddComponent(new VignetteComponent());
             m_Dithering = AddComponent(new DitheringComponent());
             m_Fxaa = AddComponent(new FxaaComponent());
+            m_Blur = AddComponent (new CanvasBlurComponent ());
 
             // Prepare state observers
             m_ComponentStates = new Dictionary<PostProcessingComponentBase, bool>();
@@ -131,6 +133,7 @@ namespace UnityEngine.PostProcessing
             m_Vignette.Init(context, profile.vignette);
             m_Dithering.Init(context, profile.dithering);
             m_Fxaa.Init(context, profile.antialiasing);
+            m_Blur.Init (context, profile.canvasBlur);
 
             // Handles profile change and 'enable' state observers
             if (m_PreviousProfile != profile)
@@ -170,6 +173,8 @@ namespace UnityEngine.PostProcessing
 
             if (!m_RenderingInSceneView)
                 TryExecuteCommandBuffer(m_MotionBlur);
+
+            
         }
 
         void OnPostRender()
@@ -179,6 +184,8 @@ namespace UnityEngine.PostProcessing
 
             if (!m_RenderingInSceneView && m_Taa.active && !profile.debugViews.willInterrupt)
                 m_Context.camera.ResetProjectionMatrix();
+
+            
         }
 
         // Classic render target pipeline for RT-based effects
@@ -290,8 +297,8 @@ namespace UnityEngine.PostProcessing
                 RenderTexture.active = oldRt;
             }
 #endif
-
-            m_RenderTextureFactory.ReleaseAll();
+            TryExecuteCommandBuffer (m_Blur);
+            m_RenderTextureFactory.ReleaseAll ();
         }
 
         void OnGUI()
