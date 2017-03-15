@@ -174,7 +174,7 @@ namespace UnityEngine.PostProcessing
             if (!m_RenderingInSceneView)
                 TryExecuteCommandBuffer(m_MotionBlur);
 
-            
+            TryExecuteCommandBuffer(m_Blur);
         }
 
         void OnPostRender()
@@ -299,7 +299,7 @@ namespace UnityEngine.PostProcessing
                 RenderTexture.active = oldRt;
             }
 #endif
-            TryExecuteCommandBuffer (m_Blur);
+
             m_RenderTextureFactory.ReleaseAll ();
         }
 
